@@ -1,9 +1,34 @@
 'use strict';
+const fs = require('fs');
 const Generator = require('yeoman-generator');
 const chalk = require('chalk');
 const yosay = require('yosay');
 
 module.exports = class extends Generator {
+  constructor(args, opts) {
+    super(args, opts);
+
+    this.argument('data', {
+      desc: 'Input data file path',
+      type: String,
+      required: false
+    });
+
+    this.argument('module', {
+      desc: 'Output module to generate',
+      type: String,
+      required: false
+    });
+
+    this.argument('password', {
+      desc: 'Password used to encrypt and decrypt',
+      type: String,
+      required: false
+    });
+
+    this.option('json');
+  }
+
   prompting() {
     // Have Yeoman greet the user.
     this.log(
@@ -16,10 +41,28 @@ module.exports = class extends Generator {
 
     const prompts = [
       {
+        type: 'input',
+        name: 'dataPath',
+        message: 'Specify input data file path',
+        default: this.options.data || 'src/sequre-data.json'
+      },
+      {
+        type: 'input',
+        name: 'modulePath',
+        message: 'Specify output module to generate',
+        default: this.options.module || 'src/sequre-data.js'
+      },
+      {
+        type: 'input',
+        name: 'password',
+        message: 'Password used to encrypt and decrypt',
+        default: this.options.password
+      },
+      {
         type: 'confirm',
-        name: 'someAnswer',
-        message: 'Would you like to enable this option?',
-        default: true
+        name: 'parseJson',
+        message: 'Would you like to parse json after decrypt?',
+        default: this.options.json
       }
     ];
 
@@ -30,10 +73,23 @@ module.exports = class extends Generator {
   }
 
   writing() {
-    this.fs.copy(
-      this.templatePath('dummyfile.txt'),
-      this.destinationPath('dummyfile.txt')
-    );
+    const done = this.async();
+    const readStream = fs.createReadStream(this.props.dataPath);
+    let data;
+
+    readStream
+      .on('data', chunk => {
+        data += chunk;
+      })
+      .on('end', () => {
+        this.fs.copyTpl(
+          this.templatePath('secure-module.js'),
+          this.destinationPath(this.props.modulePath),
+          { json: data }
+        );
+
+        done();
+      });
   }
 
   install() {
