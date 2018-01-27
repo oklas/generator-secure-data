@@ -1,0 +1,9 @@
+{
+  "generator-node": {
+    "promptValues": {
+      "authorName": "Serguei Okladnikov",
+      "authorEmail": "oklaspec@gmail.com",
+      "authorUrl": "https://github.com/oklas"
+    }
+  }
+}
