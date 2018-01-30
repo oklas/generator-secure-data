@@ -1,8 +1,17 @@
 'use strict';
-const fs = require('fs');
 const Generator = require('yeoman-generator');
 const chalk = require('chalk');
 const yosay = require('yosay');
+const cryptData = require('./crypt-data');
+
+function generatePassword(len = 10) {
+  const chars =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz' +
+    '0123456789!@#$%^&*()-_=+[]{}:;/|,.<>?~'.split('');
+  return Array(len)
+    .map(() => chars[Math.floor(Math.random() * chars.length)])
+    .join('');
+}
 
 module.exports = class extends Generator {
   constructor(args, opts) {
@@ -56,7 +65,7 @@ module.exports = class extends Generator {
         type: 'input',
         name: 'password',
         message: 'Password used to encrypt and decrypt',
-        default: this.options.password
+        default: this.options.password || generatePassword()
       },
       {
         type: 'confirm',
@@ -74,22 +83,23 @@ module.exports = class extends Generator {
 
   writing() {
     const done = this.async();
-    const readStream = fs.createReadStream(this.props.dataPath);
-    let data;
 
-    readStream
-      .on('data', chunk => {
-        data += chunk;
-      })
-      .on('end', () => {
-        this.fs.copyTpl(
-          this.templatePath('secure-module.js'),
-          this.destinationPath(this.props.modulePath),
-          { json: data }
-        );
+    const task = {
+      password: this.props.password,
+      dataPath: this.props.dataPath,
+      json: this.props.parseJson
+    };
 
-        done();
-      });
+    cryptData(task, (err, task) => {
+      if (err) return done(err);
+
+      this.fs.copyTpl(
+        this.templatePath('secure-module.js'),
+        this.destinationPath(this.props.modulePath),
+        task
+      );
+      done();
+    });
   }
 
   install() {
