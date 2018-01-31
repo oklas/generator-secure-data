@@ -6,6 +6,7 @@ module.exports = function(password) {
   const pbkdf2Iters = <%- pbkdf2Iters %>;
   const pbkdf2Hash = "<%- pbkdf2Hash %>";
   const keyLength = <%- keyLength %>;
+  const authTag = "<%- authTag.toString(format) %>";
   const salt = "<%- salt.toString(format) %>";
   const iv = "<%- iv.toString(format) %>";
   const cipher =
@@ -25,11 +26,14 @@ module.exports = function(password) {
            const decipher = crypto.createDecipheriv(
              algorithm, key, Buffer.from(iv, format)
            );
+           decipher.setAuthTag(Buffer.from(authTag, format))
            <% if(json) { %>
              data = decipher.update(cipher, format, 'utf8');
+             data += decipher.final('utf8')
              data = JSON.parse(data);
            <% } else { %>
              data = decipher.update(cipher, format);
+             data += decipher.final()
            <% } %>
          } catch(err) {
             return reject(err)

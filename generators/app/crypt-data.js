@@ -62,6 +62,8 @@ function prepareVectors(task, callback) {
 function encrypt(task) {
   var cipher = crypto.createCipheriv(ALGORITHM, task.key, task.iv);
   task.cipher = cipher.update(task.data, '', DATA_FORMAT);
+  task.cipher += cipher.final(DATA_FORMAT);
+  task.authTag = cipher.getAuthTag();
 }
 
 module.exports = function(task, callback) {
