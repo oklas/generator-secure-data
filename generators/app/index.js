@@ -1,5 +1,6 @@
 'use strict';
 const Generator = require('yeoman-generator');
+const fs = require('fs');
 const chalk = require('chalk');
 const yosay = require('yosay');
 const cryptData = require('./crypt-data');
@@ -42,6 +43,10 @@ module.exports = class extends Generator {
 
     this.option('raw', {
       desc: 'Return raw data after decrypt (incompatible with --json)'
+    });
+
+    this.option('remove', {
+      desc: 'Remove destination module path before output'
     });
   }
 
@@ -95,6 +100,7 @@ module.exports = class extends Generator {
       props.password = props.password || this.options.password;
       props.modulePath = props.modulePath || this.options.module;
       props.dataPath = props.dataPath || this.options.data;
+      props.remove = props.remove || this.options.remove;
       this.props = props;
     });
   }
@@ -110,6 +116,8 @@ module.exports = class extends Generator {
 
     cryptData(task, (err, task) => {
       if (err) return done(err);
+
+      if (this.props.remove) fs.unlinkSync(this.props.modulePath);
 
       this.fs.copyTpl(
         this.templatePath('secure-module.js'),
