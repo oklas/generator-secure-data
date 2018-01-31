@@ -7,12 +7,12 @@ First, install [Yeoman](http://yeoman.io) and `generator-secure-data`
 using [npm](https://www.npmjs.com/) (we assume you have pre-installed
 [node.js](https://nodejs.org/)).
 
+(node v8 and above required for `generator-secure-data`)
+
 ```sh
 npm install -g yo
 npm install -g generator-secure-data
 ```
-
-All prompts may be skipped if command line args is provided.
 
 # Usage
 
@@ -22,13 +22,13 @@ API keys, passwords, etc - it is same things. Application itself
 is a plain data. And secure data in it must be crypted.
 
 This generator require file with secure data and generate
-module which contain such secure data in packed crypted form:
+module which contain that secure data in packed crypted form:
 
 ```
 secure-data.json --> [yo secure-data] --> cipher.js
 ```
 
-To generate your secure data module (args avaialble):
+To generate your secure data module (args available):
 
 ```sh
 $ yo secure-data
@@ -49,7 +49,8 @@ console.log(await cipher('password'))
 
 # Command line args
 
-Command line args is available
+Command line args is available for each propmt. If command line argument
+is provided then appropriate prompt is skipped.
 
 ```sh
 yo secure-data [options] [<data>] [<module>] [<password>]
