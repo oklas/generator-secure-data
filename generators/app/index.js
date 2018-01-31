@@ -4,10 +4,11 @@ const chalk = require('chalk');
 const yosay = require('yosay');
 const cryptData = require('./crypt-data');
 
-function generatePassword(len = 10) {
-  const chars =
+function generatePassword(len) {
+  const chars = (
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz' +
-    '0123456789!@#$%^&*()-_=+[]{}:;/|,.<>?~'.split('');
+    '0123456789!@#$%^&*()-_=+[]{}:;/|,.<>?~'
+  ).split('');
   return Array(len)
     .map(() => chars[Math.floor(Math.random() * chars.length)])
     .join('');
@@ -30,12 +31,18 @@ module.exports = class extends Generator {
     });
 
     this.argument('password', {
-      desc: 'Password used to encrypt and decrypt',
+      desc: 'Password used to encrypt',
       type: String,
       required: false
     });
 
-    this.option('json');
+    this.option('json', {
+      desc: 'Parse json after decrypt (incompatible with --raw)'
+    });
+
+    this.option('raw', {
+      desc: 'Return raw data after decrypt (incompatible with --json)'
+    });
   }
 
   prompting() {
@@ -48,35 +55,46 @@ module.exports = class extends Generator {
       )
     );
 
-    const prompts = [
-      {
+    const prompts = [];
+
+    if (!this.options.data)
+      prompts.push({
         type: 'input',
         name: 'dataPath',
         message: 'Specify input data file path',
         default: this.options.data || 'src/sequre-data.json'
-      },
-      {
+      });
+
+    if (!this.options.module)
+      prompts.push({
         type: 'input',
         name: 'modulePath',
         message: 'Specify output module to generate',
         default: this.options.module || 'src/sequre-data.js'
-      },
-      {
+      });
+
+    if (!this.options.password)
+      prompts.push({
         type: 'input',
         name: 'password',
-        message: 'Password used to encrypt and decrypt',
-        default: this.options.password || generatePassword()
-      },
-      {
+        message: 'Password used to encrypt',
+        default: this.options.password || generatePassword(10)
+      });
+
+    if (!this.options.json && !this.options.raw)
+      prompts.push({
         type: 'confirm',
         name: 'parseJson',
         message: 'Would you like to parse json after decrypt?',
         default: this.options.json
-      }
-    ];
+      });
 
     return this.prompt(prompts).then(props => {
       // To access props later use this.props.someAnswer;
+      props.parseJson = props.parseJson || this.options.json;
+      props.password = props.password || this.options.password;
+      props.modulePath = props.modulePath || this.options.module;
+      props.dataPath = props.dataPath || this.options.data;
       this.props = props;
     });
   }
