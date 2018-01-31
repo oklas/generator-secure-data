@@ -1,4 +1,10 @@
-# generator-secure-data [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url] [![Coverage percentage][coveralls-image]][coveralls-url]
+# generator-secure-data
+
+[![NPM version][npm-image]][npm-url]
+[![Build Status][travis-image]][travis-url]
+[![Dependency Status][daviddm-image]][daviddm-url]
+[![Test Coverage][coverage-image]][coverage-url]
+
 > Encrypt the secure data and wrap it into the module
 
 ## Installation
@@ -91,3 +97,6 @@ MIT © [Serguei Okladnikov](https://github.com/oklas)
 [daviddm-url]: https://david-dm.org/oklas/generator-secure-data
 [coveralls-image]: https://coveralls.io/repos/oklas/generator-secure-data/badge.svg
 [coveralls-url]: https://coveralls.io/r/oklas/generator-secure-data
+[coverage-image]: https://img.shields.io/codecov/c/github/oklas/generator-secure-data.svg
+[coverage-url]: https://codecov.io/gh/oklas/generator-secure-data
+
