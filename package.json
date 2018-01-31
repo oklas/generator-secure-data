@@ -1,6 +1,6 @@
 {
   "name": "generator-secure-data",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Encrypt the secure data and wrap it into the module",
   "homepage": "https://github.com/oklas/generator-secure-data",
   "author": {
