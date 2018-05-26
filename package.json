@@ -51,7 +51,7 @@
     "yeoman-test": "^1.7.0",
     "yeoman-assert": "^3.1.0",
     "codecov": "^3.0.0",
-    "nsp": "^2.6.3",
+    "nsp": "^3.2.1",
     "eslint": "^4.1.0",
     "prettier": "^1.7.0",
     "husky": "^0.14.3",
@@ -62,10 +62,10 @@
     "jest": "^22.0.6"
   },
   "dependencies": {
-    "async": "^2.6.0",
-    "chalk": "^2.1.0",
-    "yeoman-generator": "^2.0.1",
-    "yosay": "^2.0.1"
+    "async": "^2.6.1",
+    "chalk": "^2.4.1",
+    "yeoman-generator": "^2.0.5",
+    "yosay": "^2.0.2"
   },
   "scripts": {
     "prepublish": "nsp check",
